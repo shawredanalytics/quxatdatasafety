@@ -910,23 +910,6 @@ def generate_blank_checklist_pdf():
     heading_style = styles["Heading2"]
     normal_style = styles["Normal"]
     
-    # Define contact details placeholders (User to update these)
-    contact_email = "[Email Address]"
-    contact_phone = "[Phone Number]"
-    contact_website = "[Website URL]"
-    contact_address = "[Physical Address]"
-    
-    def on_page(canvas, doc):
-        canvas.saveState()
-        
-        # Draw Footer with contact details
-        canvas.setFont("Helvetica", 8)
-        footer_text = f"Contact: {contact_email} | {contact_phone} | {contact_website}"
-        canvas.drawString(30, 20, footer_text)
-        canvas.drawRightString(A4[0]-30, 20, f"Page {doc.page}")
-        
-        canvas.restoreState()
-
     elements = []
     
     # Use relative path for logo
@@ -1061,7 +1044,7 @@ def generate_blank_checklist_pdf():
     ]))
     elements.append(ransom_table)
     
-    doc.build(elements, onFirstPage=on_page, onLaterPages=on_page)
+    doc.build(elements)
     buffer.seek(0)
     return buffer.getvalue()
 
