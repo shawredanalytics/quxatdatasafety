@@ -918,15 +918,6 @@ def generate_blank_checklist_pdf():
     
     def on_page(canvas, doc):
         canvas.saveState()
-        # Draw background poster if available
-        poster_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "checklist_bg.png")
-        if os.path.exists(poster_path):
-            try:
-                # Draw image covering the entire page
-                page_width, page_height = A4
-                canvas.drawImage(poster_path, 0, 0, width=page_width, height=page_height, preserveAspectRatio=False, mask='auto')
-            except Exception:
-                pass
         
         # Draw Footer with contact details
         canvas.setFont("Helvetica", 8)
