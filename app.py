@@ -888,6 +888,101 @@ def generate_word_report(
     return buffer.getvalue()
 
 
+def generate_blank_checklist_pdf():
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=A4)
+    styles = getSampleStyleSheet()
+    
+    # Custom styles
+    title_style = styles["Title"]
+    heading_style = styles["Heading2"]
+    normal_style = styles["Normal"]
+    
+    elements = []
+    
+    # Use relative path for logo
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    logo_filename = "logo.png"
+    logo_path = os.path.join(current_dir, logo_filename)
+    
+    if os.path.exists(logo_path):
+        elements.append(Image(logo_path, width=200, height=60))
+        elements.append(Spacer(1, 12))
+        
+    # Title
+    elements.append(Paragraph("QuXAT Data Safety - Assessment Checklist", title_style))
+    elements.append(Spacer(1, 12))
+    
+    elements.append(Paragraph("This checklist is designed to help organizations assess their data safety posture against ISO 27001:2022 controls and Ransomware readiness.", normal_style))
+    elements.append(Spacer(1, 24))
+    
+    # ISO Section
+    elements.append(Paragraph("ISO 27001:2022 Controls Assessment", heading_style))
+    elements.append(Spacer(1, 12))
+    
+    iso_data = [["Control", "Clause", "Description", "Status (0/50/100)"]]
+    for control in ISO_CONTROLS:
+        details = ISO_CONTROL_DETAILS.get(control, {})
+        clause = details.get("clause", "")
+        desc = details.get("description", "")
+        
+        iso_data.append([
+            Paragraph(control, normal_style),
+            Paragraph(clause, normal_style),
+            Paragraph(desc, normal_style),
+            "" 
+        ])
+        
+    iso_table = Table(iso_data, colWidths=[110, 70, 180, 80])
+    iso_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+    ]))
+    elements.append(iso_table)
+    elements.append(Spacer(1, 24))
+    
+    # Ransomware Section
+    elements.append(Paragraph("Ransomware Readiness Checklist", heading_style))
+    elements.append(Spacer(1, 12))
+    
+    ransom_data = [["Question", "Clause", "Description", "Response (Yes/No/Partial)"]]
+    for question in RANSOMWARE_QUESTIONS:
+        details = RANSOMWARE_DETAILS.get(question, {})
+        label = details.get("label", question)
+        clause = details.get("clause", "")
+        desc = details.get("description", "")
+        
+        ransom_data.append([
+            Paragraph(label, normal_style),
+            Paragraph(clause, normal_style),
+            Paragraph(desc, normal_style),
+            ""
+        ])
+        
+    ransom_table = Table(ransom_data, colWidths=[110, 70, 180, 80])
+    ransom_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+    ]))
+    elements.append(ransom_table)
+    
+    doc.build(elements)
+    buffer.seek(0)
+    return buffer.getvalue()
+
+
 def show_login():
     st.markdown(
         """
@@ -913,6 +1008,18 @@ def show_login():
 
     st.title("QuXAT Data Safety Application")
     st.subheader("Secure Healthcare Data with Ransomware Risk Dashboard")
+
+    st.markdown("---")
+    st.write("Interested in undergoing the QuXAT Data Safety Process? Download our checklist below:")
+    
+    pdf_bytes = generate_blank_checklist_pdf()
+    st.download_button(
+        label="Download Blank Assessment Checklist",
+        data=pdf_bytes,
+        file_name="QuXAT_Data_Safety_Checklist.pdf",
+        mime="application/pdf"
+    )
+    st.markdown("---")
 
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
