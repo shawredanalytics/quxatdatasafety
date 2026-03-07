@@ -922,16 +922,31 @@ def generate_blank_checklist_pdf():
     elements.append(Spacer(1, 6))
     
     legend_data = [
-        ["Score", "ISO 27001 Criteria", "Ransomware Readiness Criteria"],
-        ["0", "Not Implemented - Control is missing or ad-hoc.", "No - Practice is not in place."],
-        ["50", "Partially Implemented - Control exists but is not documented or consistently applied.", "Partial - Practice is in place but not fully effective or consistent."],
-        ["100", "Implemented - Control is fully documented, implemented, and effective.", "Yes - Practice is fully established and effective."]
+        [
+            Paragraph("<b>Score</b>", normal_style),
+            Paragraph("<b>ISO 27001 Criteria</b>", normal_style),
+            Paragraph("<b>Ransomware Readiness Criteria</b>", normal_style)
+        ],
+        [
+            Paragraph("0", normal_style),
+            Paragraph("Not Implemented - Control is missing or ad-hoc.", normal_style),
+            Paragraph("No - Practice is not in place.", normal_style)
+        ],
+        [
+            Paragraph("50", normal_style),
+            Paragraph("Partially Implemented - Control exists but is not documented or consistently applied.", normal_style),
+            Paragraph("Partial - Practice is in place but not fully effective or consistent.", normal_style)
+        ],
+        [
+            Paragraph("100", normal_style),
+            Paragraph("Implemented - Control is fully documented, implemented, and effective.", normal_style),
+            Paragraph("Yes - Practice is fully established and effective.", normal_style)
+        ]
     ]
     
     legend_table = Table(legend_data, colWidths=[40, 200, 200])
     legend_table.setStyle(TableStyle([
         ('GRID', (0, 0), (-1, -1), 0.5, colors.black),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
         ('VALIGN', (0, 0), (-1, -1), 'TOP'),
         ('PADDING', (0, 0), (-1, -1), 6),
@@ -943,7 +958,12 @@ def generate_blank_checklist_pdf():
     elements.append(Paragraph("ISO 27001:2022 Controls Assessment", heading_style))
     elements.append(Spacer(1, 12))
     
-    iso_data = [["Control", "Clause", "Description", "Score (0/50/100)"]]
+    iso_data = [[
+        Paragraph("<b>Control</b>", normal_style),
+        Paragraph("<b>Clause</b>", normal_style),
+        Paragraph("<b>Description</b>", normal_style),
+        Paragraph("<b>Score (0/50/100)</b>", normal_style)
+    ]]
     for control in ISO_CONTROLS:
         details = ISO_CONTROL_DETAILS.get(control, {})
         clause = details.get("clause", "")
@@ -960,7 +980,6 @@ def generate_blank_checklist_pdf():
     iso_table.setStyle(TableStyle([
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
         ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
         ('VALIGN', (0, 0), (-1, -1), 'TOP'),
@@ -972,7 +991,12 @@ def generate_blank_checklist_pdf():
     elements.append(Paragraph("Ransomware Readiness Checklist", heading_style))
     elements.append(Spacer(1, 12))
     
-    ransom_data = [["Question", "Clause", "Description", "Score (0/50/100)"]]
+    ransom_data = [[
+        Paragraph("<b>Question</b>", normal_style),
+        Paragraph("<b>Clause</b>", normal_style),
+        Paragraph("<b>Description</b>", normal_style),
+        Paragraph("<b>Score (0/50/100)</b>", normal_style)
+    ]]
     for question in RANSOMWARE_QUESTIONS:
         details = RANSOMWARE_DETAILS.get(question, {})
         label = details.get("label", question)
@@ -990,7 +1014,6 @@ def generate_blank_checklist_pdf():
     ransom_table.setStyle(TableStyle([
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
         ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
         ('VALIGN', (0, 0), (-1, -1), 'TOP'),
