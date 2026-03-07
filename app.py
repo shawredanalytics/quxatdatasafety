@@ -910,6 +910,32 @@ def generate_blank_checklist_pdf():
     heading_style = styles["Heading2"]
     normal_style = styles["Normal"]
     
+    # Define contact details placeholders (User to update these)
+    contact_email = "[Email Address]"
+    contact_phone = "[Phone Number]"
+    contact_website = "[Website URL]"
+    contact_address = "[Physical Address]"
+    
+    def on_page(canvas, doc):
+        canvas.saveState()
+        # Draw background poster if available
+        poster_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "checklist_bg.png")
+        if os.path.exists(poster_path):
+            try:
+                # Draw image covering the entire page
+                page_width, page_height = A4
+                canvas.drawImage(poster_path, 0, 0, width=page_width, height=page_height, preserveAspectRatio=False, mask='auto')
+            except Exception:
+                pass
+        
+        # Draw Footer with contact details
+        canvas.setFont("Helvetica", 8)
+        footer_text = f"Contact: {contact_email} | {contact_phone} | {contact_website}"
+        canvas.drawString(30, 20, footer_text)
+        canvas.drawRightString(A4[0]-30, 20, f"Page {doc.page}")
+        
+        canvas.restoreState()
+
     elements = []
     
     # Use relative path for logo
@@ -1044,7 +1070,7 @@ def generate_blank_checklist_pdf():
     ]))
     elements.append(ransom_table)
     
-    doc.build(elements)
+    doc.build(elements, onFirstPage=on_page, onLaterPages=on_page)
     buffer.seek(0)
     return buffer.getvalue()
 
