@@ -934,7 +934,7 @@ def generate_blank_checklist_pdf():
         elements.append(Spacer(1, 12))
         
     # Title
-    elements.append(Paragraph("QuXAT Data Safety - Assessment Checklist", title_style))
+    elements.append(Paragraph("QuXAT Healthcare Data Safety - Self Assessment Checklist", title_style))
     elements.append(Spacer(1, 12))
     
     elements.append(Paragraph("This checklist is designed to help organizations assess their data safety posture against ISO 27001:2022 controls and Ransomware readiness.", normal_style))
@@ -1082,7 +1082,7 @@ def show_login():
     st.download_button(
         label="Download Blank Assessment Checklist",
         data=pdf_bytes,
-        file_name="QuXAT_Data_Safety_Checklist.pdf",
+        file_name="QuXAT_Healthcare_Data_Safety_Self_Assessment_Checklist.pdf",
         mime="application/pdf"
     )
     st.markdown("---")
