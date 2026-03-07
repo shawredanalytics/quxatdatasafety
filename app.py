@@ -9,7 +9,7 @@ import plotly.express as px
 import streamlit as st
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle, Image
+from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle, Image, PageBreak
 from reportlab.lib import colors
 from reportlab.lib.utils import ImageReader
 
@@ -976,7 +976,7 @@ def generate_blank_checklist_pdf():
         ('PADDING', (0, 0), (-1, -1), 6),
     ]))
     elements.append(legend_table)
-    elements.append(Spacer(1, 24))
+    elements.append(PageBreak())
     
     # ISO Section
     elements.append(Paragraph("ISO 27001:2022 Controls Assessment", heading_style))
@@ -1009,7 +1009,7 @@ def generate_blank_checklist_pdf():
         ('VALIGN', (0, 0), (-1, -1), 'TOP'),
     ]))
     elements.append(iso_table)
-    elements.append(Spacer(1, 24))
+    elements.append(PageBreak())
     
     # Ransomware Section
     elements.append(Paragraph("Ransomware Readiness Checklist", heading_style))
