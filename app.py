@@ -11,6 +11,7 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle, Image
 from reportlab.lib import colors
+from reportlab.lib.utils import ImageReader
 
 try:
     from docx import Document
@@ -625,7 +626,18 @@ def generate_pdf_report(
     logo_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "logo.png")
     
     if os.path.exists(logo_path):
-        elements.append(Image(logo_path, width=1.5*72, height=0.5*72))
+        try:
+            img = ImageReader(logo_path)
+            iw, ih = img.getSize()
+            aspect = ih / float(iw)
+            width = 1.5 * 72
+            height = width * aspect
+            if height > 0.75 * 72: # Limit height
+                height = 0.75 * 72
+                width = height / aspect
+            elements.append(Image(logo_path, width=width, height=height))
+        except Exception:
+            elements.append(Image(logo_path, width=1.5*72, height=0.5*72))
         elements.append(Spacer(1, 12))
 
     app_name = "QuXAT Data Safety Application"
@@ -906,7 +918,19 @@ def generate_blank_checklist_pdf():
     logo_path = os.path.join(current_dir, logo_filename)
     
     if os.path.exists(logo_path):
-        elements.append(Image(logo_path, width=200, height=60))
+        try:
+            # Dynamically resize logo to fit within a reasonable box (e.g. 200x80)
+            img = ImageReader(logo_path)
+            iw, ih = img.getSize()
+            aspect = ih / float(iw)
+            width = 200
+            height = width * aspect
+            if height > 80:
+                height = 80
+                width = height / aspect
+            elements.append(Image(logo_path, width=width, height=height))
+        except Exception:
+            elements.append(Image(logo_path, width=200, height=60))
         elements.append(Spacer(1, 12))
         
     # Title
