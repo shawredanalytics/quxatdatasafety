@@ -1044,7 +1044,7 @@ def generate_blank_checklist_pdf():
     ]))
     elements.append(ransom_table)
     
-    elements.append(Spacer(1, 36))
+    elements.append(PageBreak())
     
     # Contact Details
     elements.append(Paragraph("<b>QuXAT Data Security - Advisory Team</b>", heading_style))
