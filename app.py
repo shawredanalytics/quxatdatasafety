@@ -914,13 +914,36 @@ def generate_blank_checklist_pdf():
     elements.append(Spacer(1, 12))
     
     elements.append(Paragraph("This checklist is designed to help organizations assess their data safety posture against ISO 27001:2022 controls and Ransomware readiness.", normal_style))
+    elements.append(Spacer(1, 12))
+    
+    # Scoring Legend
+    elements.append(Paragraph("Scoring Guide (Self-Assessment)", heading_style))
+    elements.append(Paragraph("Use the following criteria to score your implementation status:", normal_style))
+    elements.append(Spacer(1, 6))
+    
+    legend_data = [
+        ["Score", "ISO 27001 Criteria", "Ransomware Readiness Criteria"],
+        ["0", "Not Implemented - Control is missing or ad-hoc.", "No - Practice is not in place."],
+        ["50", "Partially Implemented - Control exists but is not documented or consistently applied.", "Partial - Practice is in place but not fully effective or consistent."],
+        ["100", "Implemented - Control is fully documented, implemented, and effective.", "Yes - Practice is fully established and effective."]
+    ]
+    
+    legend_table = Table(legend_data, colWidths=[40, 200, 200])
+    legend_table.setStyle(TableStyle([
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.black),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+        ('PADDING', (0, 0), (-1, -1), 6),
+    ]))
+    elements.append(legend_table)
     elements.append(Spacer(1, 24))
     
     # ISO Section
     elements.append(Paragraph("ISO 27001:2022 Controls Assessment", heading_style))
     elements.append(Spacer(1, 12))
     
-    iso_data = [["Control", "Clause", "Description", "Status (0/50/100)"]]
+    iso_data = [["Control", "Clause", "Description", "Score (0/50/100)"]]
     for control in ISO_CONTROLS:
         details = ISO_CONTROL_DETAILS.get(control, {})
         clause = details.get("clause", "")
@@ -935,12 +958,10 @@ def generate_blank_checklist_pdf():
         
     iso_table = Table(iso_data, colWidths=[110, 70, 180, 80])
     iso_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
         ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
         ('VALIGN', (0, 0), (-1, -1), 'TOP'),
     ]))
@@ -951,7 +972,7 @@ def generate_blank_checklist_pdf():
     elements.append(Paragraph("Ransomware Readiness Checklist", heading_style))
     elements.append(Spacer(1, 12))
     
-    ransom_data = [["Question", "Clause", "Description", "Response (Yes/No/Partial)"]]
+    ransom_data = [["Question", "Clause", "Description", "Score (0/50/100)"]]
     for question in RANSOMWARE_QUESTIONS:
         details = RANSOMWARE_DETAILS.get(question, {})
         label = details.get("label", question)
@@ -967,12 +988,10 @@ def generate_blank_checklist_pdf():
         
     ransom_table = Table(ransom_data, colWidths=[110, 70, 180, 80])
     ransom_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
         ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
         ('VALIGN', (0, 0), (-1, -1), 'TOP'),
     ]))
