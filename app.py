@@ -1,5 +1,7 @@
 import os
+import shutil
 import sqlite3
+import tempfile
 from datetime import datetime
 from io import BytesIO
 
@@ -32,8 +34,28 @@ except ImportError:
 load_dotenv()
 
 
-# Use absolute path relative to script for DB
-DB_PATH = os.getenv("DB_PATH", os.path.join(os.path.dirname(os.path.abspath(__file__)), "healthsecure.db"))
+def resolve_db_path():
+    configured_path = os.getenv("DB_PATH")
+    if configured_path:
+        configured_dir = os.path.dirname(configured_path)
+        if configured_dir:
+            os.makedirs(configured_dir, exist_ok=True)
+        return configured_path
+
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    bundled_db_path = os.path.join(current_dir, "healthsecure.db")
+    runtime_dir = os.path.join(tempfile.gettempdir(), "quxatdatasafety")
+    runtime_db_path = os.path.join(runtime_dir, "healthsecure.db")
+
+    os.makedirs(runtime_dir, exist_ok=True)
+
+    if not os.path.exists(runtime_db_path) and os.path.exists(bundled_db_path):
+        shutil.copy2(bundled_db_path, runtime_db_path)
+
+    return runtime_db_path
+
+
+DB_PATH = resolve_db_path()
 DEFAULT_ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "admin")
 DEFAULT_ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "admin123")
 
